@@ -47,36 +47,40 @@ import com.fg.chat.app.R
 import com.fg.chat.app.ui.theme.DarkBlue
 import com.fg.chat.app.ui.theme.DarkCerulean
 import com.fg.chat.app.ui.theme.LightBlue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-@Composable
-fun OnboardingScreen() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFCCEEFF)),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.Start,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .clip(RoundedCornerShape(24.dp))
-                    .background(Color.White),
-                contentAlignment = Alignment.Center
-            ) {
-                FillingChatBubblesAnimation()
-            }
-        }
-    }
-}
+//@Composable
+//fun OnboardingScreen(onFinish: () -> Unit) {
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(Color(0xFFCCEEFF)),
+//        contentAlignment = Alignment.Center
+//    ) {
+//        Column(
+//            horizontalAlignment = Alignment.Start,
+//            modifier = Modifier.fillMaxWidth()
+//        ) {
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .fillMaxHeight()
+//                    .clip(RoundedCornerShape(24.dp))
+//                    .background(Color.White),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                FillingChatBubblesAnimation()
+//            }
+//        }
+//    }
+//}
 
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
-fun FillingChatBubblesAnimation() {
+fun OnboardingScreen(onFinish: () -> Unit) {
     // Biến điều khiển bắt đầu animation
     var startAnimation by remember { mutableStateOf(false) }
     var visible by remember { mutableStateOf(true) }
@@ -84,12 +88,18 @@ fun FillingChatBubblesAnimation() {
     val progress by animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0f,
         animationSpec = tween(
-            durationMillis = 2000, // set animation time 2 seconds
+            durationMillis = 1000, // set animation time 2 seconds
             easing = LinearEasing // animation same loading progress
         ),
         finishedListener = {
             if (it == 1f) {
                 visible = false
+            }
+            CoroutineScope(Dispatchers.Default).launch {
+                delay(2000)
+                launch(Dispatchers.Main){
+                    onFinish.invoke()
+                }
             }
         }
     )
@@ -187,6 +197,7 @@ fun FillingChatBubblesAnimation() {
                 ChatBannerUI(modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
                 Spacer(modifier = Modifier.weight(1f))
             }
+
         }
     }
 }
