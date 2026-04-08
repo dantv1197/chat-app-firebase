@@ -47,12 +47,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 import com.fg.chat.app.keypad.ui.KeypadButton
 import com.fg.chat.app.ui.theme.GradientLightBlue
 import com.fg.chat.app.ui.theme.PaleCyan
 import com.fg.chat.app.ui.theme.White
 
 val phoneRegex: Regex = Regex("^\\+?[1-9]\\d{1,14}\$")
+
 //https://www.figma.com/design/0x2AQY5fs270EqaJeb1gUp/Chatting-App-UI-Kit-Design-%7C-E-Chat-%7C-Figma--Community-?node-id=37-4482&t=1jKBDwBRMiO5LHdX-0
 @Composable
 fun LoginScreen(
@@ -224,9 +226,11 @@ fun LoginScreen(
                 .align(Alignment.CenterHorizontally)
         ) {
             KeypadButton(
-                onKeyClick = {  Log.e("Click_edit", "$it")
-                    inputNumber = inputNumber + it },
-                onDeleteClick = { inputNumber.dropLast(inputNumber.length-1)}
+                onKeyClick = {
+                    Log.e("Click_edit", "$it")
+                    inputNumber += it
+                },
+                onDeleteClick = { inputNumber.dropLast(inputNumber.length - 1) }
             )
         }
     }

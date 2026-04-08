@@ -62,7 +62,7 @@ val listMessageIntroduce = listOf(
 )
 
 @Composable
-fun IntroduceScreen(onSkip:()->Unit) {
+fun IntroduceScreen(onSkip: () -> Unit) {
     var introduceItem by remember { mutableIntStateOf(0) }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -70,14 +70,14 @@ fun IntroduceScreen(onSkip:()->Unit) {
             val width = size.width
             val height = size.height
 
-            // 1. Vẽ lớp màu xanh nhạt nhất (phía trên cùng)
-            // Lớp này có thể là màu nền mặc định hoặc vẽ một hình chữ nhật
+            // 1. Draw the lightest blue layer (at the very top)
+            // This layer could be the default background color or a rectangle
 
-            // 2. Vẽ lớp đường cong thứ nhất (Màu xanh trung bình)
+            // 2. Draw the first curve layer (Medium Blue)
             val path1 = Path().apply {
-                moveTo(0f, height * 0.5f) // Điểm bắt đầu bên trái
-                // cubicTo hoặc quadraticBezierTo để tạo độ cong
-                // Ở đây dùng quadraticBezierTo: (điểm điều khiển, điểm kết thúc)
+                moveTo(0f, height * 0.5f) // Starting point on the left
+                // cubicTo or quadraticBezierTo to create curvature
+                // Here using quadraticBezierTo: (control point, end point)
                 quadraticTo(
                     x1 = width / 2f, y1 = height * 0.7f,
                     x2 = width, y2 = height * 0.5f
@@ -88,7 +88,7 @@ fun IntroduceScreen(onSkip:()->Unit) {
             }
             drawPath(path = path1, color = LightBlueBg)
 
-            // 3. Vẽ lớp đường cong thứ hai (Màu xanh đậm hơn ở dưới)
+            // 3. Draw the second curve layer (Darker blue below)
             val path2 = Path().apply {
                 moveTo(0f, height * 0.65F)
                 quadraticTo(
@@ -99,7 +99,7 @@ fun IntroduceScreen(onSkip:()->Unit) {
                 lineTo(0f, height)
                 close()
             }
-            // Sử dụng alpha hoặc màu cụ thể để tạo hiệu ứng chồng lấp
+            // Use alpha or a specific color to create an overlapping effect
             drawPath(path = path2, color = MidBlue.copy(alpha = 0.6f))
         }
         Column(
@@ -109,7 +109,7 @@ fun IntroduceScreen(onSkip:()->Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = listImageIntroduce[introduceItem]), // Thay thế bằng ID của bạn
+                painter = painterResource(id = listImageIntroduce[introduceItem]), // Replace with your ID
                 contentDescription = "Onboarding Illustration",
                 modifier = Modifier
                     .fillMaxWidth()
@@ -141,15 +141,15 @@ fun IntroduceScreen(onSkip:()->Unit) {
             )
             Spacer(modifier = Modifier.weight(1f))
             Button(
-                onClick = { /* Xử lý sự kiện click */ },
+                onClick = { /* Handle click event */ },
                 modifier = Modifier
                     .padding(0.dp, 0.dp, 0.dp, 60.dp)
                     .fillMaxWidth()
                     .height(56.dp)
                     .padding(horizontal = 24.dp),
-                shape = RoundedCornerShape(25.dp), // Góc bo tròn nhẹ
+                shape = RoundedCornerShape(25.dp), // Slightly rounded corners
                 colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp) // Thêm bóng đổ
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp) // Add shadow
             ) {
                 Text(
                     text = "Get started",
@@ -166,11 +166,11 @@ fun IntroduceScreen(onSkip:()->Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Nút "Skip"
+                // "Skip" Button
                 TextButton(onClick = { onSkip.invoke() }) {
                     Text(
                         text = "Skip",
-                        color = DarkBlueText.copy(alpha = 0.7f), // Màu xanh mờ hơn
+                        color = DarkBlueText.copy(alpha = 0.7f), // Faded blue color
                         fontSize = 18.sp
                     )
                 }

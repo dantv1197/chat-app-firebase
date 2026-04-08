@@ -1,12 +1,10 @@
 package com.fg.chat.app.ui.onboarding
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
@@ -43,48 +40,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fg.chat.app.R
-import com.fg.chat.app.ui.theme.DarkBlue
-import com.fg.chat.app.ui.theme.DarkCerulean
-import com.fg.chat.app.ui.theme.LightBlue
+import android.annotation.SuppressLint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
-//@Composable
-//fun OnboardingScreen(onFinish: () -> Unit) {
-//    Box(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(Color(0xFFCCEEFF)),
-//        contentAlignment = Alignment.Center
-//    ) {
-//        Column(
-//            horizontalAlignment = Alignment.Start,
-//            modifier = Modifier.fillMaxWidth()
-//        ) {
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .fillMaxHeight()
-//                    .clip(RoundedCornerShape(24.dp))
-//                    .background(Color.White),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                FillingChatBubblesAnimation()
-//            }
-//        }
-//    }
-//}
+import com.fg.chat.app.R
+import com.fg.chat.app.ui.theme.DarkBlue
+import com.fg.chat.app.ui.theme.DarkCerulean
+import com.fg.chat.app.ui.theme.LightBlue
 
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun OnboardingScreen(onFinish: () -> Unit) {
-    // Biến điều khiển bắt đầu animation
+    // start controlling animation
     var startAnimation by remember { mutableStateOf(false) }
     var visible by remember { mutableStateOf(true) }
-    // Tiến trình chạy từ 0.0 đến 1.0 (0% -> 100%)
+    // process start 0.0 to 1.0 (0% -> 100%)
     val progress by animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0f,
         animationSpec = tween(
@@ -94,10 +66,11 @@ fun OnboardingScreen(onFinish: () -> Unit) {
         finishedListener = {
             if (it == 1f) {
                 visible = false
+                startAnimation= false
             }
             CoroutineScope(Dispatchers.Default).launch {
                 delay(2000)
-                launch(Dispatchers.Main){
+                launch(Dispatchers.Main) {
                     onFinish.invoke()
                 }
             }
@@ -112,31 +85,27 @@ fun OnboardingScreen(onFinish: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight() // Chiều cao chiếm phần lớn
+            .fillMaxHeight() // Take up most of the height
             .clip(RoundedCornerShape(24.dp)),
         contentAlignment = Alignment.Center
     ) {
 
         if (visible) {
-            // --- Bắt đầu phần Animation "Đổ màu" (chuẩn 100%) ---
-            // Kích thước cố định cho icon để các phần khớp nhau
+            // --- Animation start painting ---
+            // set icon size
             val iconSize = 150.dp
-            // Box tổng chứa hai lớp icon
             Box(
                 modifier = Modifier.size(iconSize),
                 contentAlignment = Alignment.Center
             ) {
-                // Lớp nền 1: Icon màu nhạt (Trạng thái CHƯA tô)
-                // (Bạn cần có file ảnh này, giả sử là ic_chat_light, giống hình 1)
+                // light color Icon
                 Image(
                     painter = painterResource(id = R.drawable.e_chat_191f1a),
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Fit
                 )
-                // Lớp phủ 2: Icon màu đậm (Trạng thái ĐÃ tô)
-                // (File ảnh này có màu xanh đậm, giả sử là ic_chat_dark, giống hình 3)
-                // Đây là "mặt nạ" dâng dần lên
+                // dark color Icon
                 Image(
                     painter = painterResource(id = R.drawable.e_chat_191f3a),
                     contentDescription = null,
@@ -144,11 +113,11 @@ fun OnboardingScreen(onFinish: () -> Unit) {
                     modifier = Modifier
                         .fillMaxSize()
                         .drawWithContent {
-                            // Tính toán tọa độ Y để cắt từ dưới lên
-                            // yTop = 0 là đỉnh, yTop = size.height là đáy
+                            // Calculate the Y coordinates to cut from bottom to top,
+                            // yTop = 0 is the top, yTop = size.height is the bottom
                             val yTop = size.height * (1f - progress)
-                            // clipRect sẽ "giữ lại" phần nội dung bên trong vùng chỉ định
-                            // Ở đây ta giữ từ yTop đến hết chiều cao (size.height)
+                            // clipRect will "retain" the content inside the specified area
+                            // Here we retain from yTop to the end of the height (size.height)
                             clipRect(
                                 top = yTop,
                                 bottom = size.height,
@@ -214,46 +183,47 @@ fun ChatBannerUI(modifier: Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
-                .padding(16.dp) // Thêm padding để không bị cắt đuôi
+                .padding(16.dp) // Add padding to avoid clipping the tail
         ) {
-            // Lấy kích thước của vùng vẽ (Canvas)
+            // Get the size of the drawing area (Canvas)
             val width = size.width
             val height = size.height
 
-            // Định nghĩa các hằng số tính toán
-            val strokeWidth = 10.dp.toPx() // Độ rộng đường viền (tùy chỉnh)
+            // Define computational constants
+            val strokeWidth = 10.dp.toPx() // Contour width (customizable)
             val ovalRect = androidx.compose.ui.geometry.Rect(0f, 0f, width, height)
-            // Vẽ cung tròn chính cho phần thân
-            // sweepAngle là 320 độ để chừa lại khoảng hở cho cái đuôi
+
+            // Draw the main arc for the body
+            // sweepAngle is 320 degrees to leave space for the tail
             drawArc(
                 color = LightBlue,
-                startAngle = 138f, // Bắt đầu ở góc dưới bên phải một chút
-                sweepAngle = 335f,
+                startAngle = 138f, // Starts in the bottom left corner
+                sweepAngle = 335f, // end in the bottom left corner
                 useCenter = false,
                 topLeft = ovalRect.topLeft,
                 size = ovalRect.size,
                 style = Stroke(width = strokeWidth)
             )
-            // Vẽ phần "đuôi" bong bóng bằng Path
-            // Chúng ta sử dụng một đường cong bezier bậc hai để tạo độ cong mượt mà
+            // Draw the bubble "tail" using Path
+            // Use a quadratic bezier curve for smooth curvature
             val tailPath = Path().apply {
                 // define start point, at the end of the arc
                 val startX = width * 0.31f
                 val startY = height * 0.948f
                 moveTo(startX, startY)
 
-                // Vẽ đường cong đến điểm kết thúc của đuôi
-                // Điểm kết thúc: nằm bên trái và thấp hơn một chút so với vòng tròn
-                val endX = width * 0.128f // Kéo đuôi ra ngoài lề Canvas
+                // Draw curve to the end point of the tail
+                // End point: located on the left and slightly lower than the circle
+                val endX = width * 0.128f // Pull the tail outside the Canvas boundary
                 val endY = height * 0.81f
 
-                // Điểm điều khiển (control point) để tạo độ cong mượt mà
+                // Control point to create smooth curvature
                 val controlX = -0.5f
                 val controlY = height * 1.15f
 
                 quadraticTo(controlX, controlY, endX, endY)
             }
-            // Vẽ đường đuôi đã định nghĩa
+            // Draw the defined tail path
             drawPath(
                 path = tailPath,
                 color = LightBlue,
