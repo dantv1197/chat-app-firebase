@@ -53,7 +53,7 @@ import com.fg.chat.app.ui.theme.PaleCyan
 import com.fg.chat.app.ui.theme.White
 
 val phoneRegex: Regex = Regex("^\\+?[1-9]\\d{1,14}\$")
-
+//https://www.figma.com/design/0x2AQY5fs270EqaJeb1gUp/Chatting-App-UI-Kit-Design-%7C-E-Chat-%7C-Figma--Community-?node-id=37-4482&t=1jKBDwBRMiO5LHdX-0
 @Composable
 fun LoginScreen(
     onNavigateToRegister: () -> Unit,
