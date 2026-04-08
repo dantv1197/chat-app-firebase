@@ -15,3 +15,6 @@ val MidBlue = Color(0xFFB3E5FC)
 val DarkBlue = Color(0xFF1A56A0)
 val LightBlueBg = Color(0xFFE3F2FD)
 val DarkBlueText = Color(0xFF1565C0)
+val White = Color.White
+val PaleCyan = Color(0xFFADE2F7)
+val GradientLightBlue = Color(0xFF40C4FF)
