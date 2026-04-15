@@ -1,6 +1,5 @@
 package com.fg.chat.app.ui.login
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -27,6 +26,8 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,24 +39,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 import com.fg.chat.app.keypad.ui.KeypadButton
 import com.fg.chat.app.ui.theme.GradientLightBlue
+import com.fg.chat.app.ui.theme.LightBlue
 import com.fg.chat.app.ui.theme.PaleCyan
 import com.fg.chat.app.ui.theme.White
 
-val phoneRegex: Regex = Regex("^\\+?[1-9]\\d{1,14}\$")
-
-//https://www.figma.com/design/0x2AQY5fs270EqaJeb1gUp/Chatting-App-UI-Kit-Design-%7C-E-Chat-%7C-Figma--Community-?node-id=37-4482&t=1jKBDwBRMiO5LHdX-0
 @Composable
 fun LoginScreen(
     onNavigateToRegister: () -> Unit,
@@ -66,171 +62,190 @@ fun LoginScreen(
     var isEnableNext by remember { mutableStateOf(false) }
     var isChecked by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
+
     BackHandler(enabled = isVisible) {
         isVisible = false
         focusManager.clearFocus()
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(White)
     ) {
-        // --- Header màu xanh ---
+        // --- Header Section ---
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(if (isVisible) 0.28f else 0.35F)
-                .clip(RoundedCornerShape(bottomStart = if (isVisible) 0.dp else 80.dp))
-                .background(Color(0xFF34A8EB))
+                .fillMaxHeight(if (isVisible) 0.3f else 0.4f)
+                .clip(RoundedCornerShape(bottomStart = if (isVisible) 0.dp else 100.dp))
+                .background(LightBlue)
                 .padding(24.dp)
         ) {
-            Text(
-                text = "Login",
-                color = White,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(top = 16.dp)
-            )
-
-            Button(
-                onClick = { onNavigateToRegister.invoke() },
-                colors = ButtonDefaults.buttonColors(containerColor = White.copy(alpha = 0.8f)),
-                shape = CircleShape,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 16.dp)
-            ) {
-                Text("Register", color = Color(0xFF4A6572))
-            }
-
-            Text(
-                text = "Enter your mobile phone",
-                color = Color.White,
-                fontSize = 28.sp,
-                lineHeight = 36.sp,
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(bottom = 24.dp)
-            )
-        }
-
-        // --- Phần nội dung nhập liệu ---
-        Spacer(modifier = if (isVisible) Modifier.weight(1f) else Modifier.height(48.dp))
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 32.dp, vertical = 8.dp),
-        ) {
             Column(
-
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-
-                Text(
-                    text = "You will get a code via sms.",
-                    color = Color.Gray,
-                    fontSize = 16.sp
-                )
-                Spacer(modifier = Modifier.height(32.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .drawBehind() { // Vẽ đường kẻ ngang phía dưới
-                            val strokeWidth = 2f
-                            val y = size.height - strokeWidth / 2
-                            drawLine(
-                                Color.Black,
-                                Offset(0f, y),
-                                Offset(size.width, y),
-                                strokeWidth
-                            )
-                        }
-                        .padding(bottom = 8.dp)
-                ) {
-                    // Giả lập chọn quốc gia
-                    Text("🇬🇧", fontSize = 24.sp)
-                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("(+44)", color = Color.Gray, fontSize = 18.sp)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    BasicTextField(
-                        value = inputNumber,
-
-                        modifier = Modifier
-                            .onFocusChanged { focusState ->
-                                if (focusState.isFocused) {
-                                    isVisible = true
-
-                                }
-                            },
-                        decorationBox = { innerTextField ->
-                            if (inputNumber.isEmpty()) {
-                                Text("00 0000 0000", color = Color.Gray)
-                            }
-                            innerTextField() // Bắt buộc gọi hàm này
-                        },
-                        // block system keyboard
-                        readOnly = true,
-                        onValueChange = { input ->
-                            if (input.all { it.isDigit() || it == '+' }) {
-                                inputNumber = input
-                            }
-                            isEnableNext = inputNumber.length >= 10
-                        },
-                        textStyle = TextStyle(fontSize = 18.sp, color = Color.Gray)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // Checkbox và Nút mũi tên
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = isChecked,
-                            onCheckedChange = { it -> isChecked = it })
-                        Text("Remember me", color = Color.Black)
-                    }
+                    Text(
+                        text = "Login",
+                        color = White,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold
+                    )
 
-                    Surface(
-                        shape = CircleShape,
-                        color = if (isEnableNext) GradientLightBlue else PaleCyan,
-                        enabled = isEnableNext,
-                        modifier = Modifier.size(56.dp),
-                        onClick = { onNavigateToNext.invoke(inputNumber) }
+                    Button(
+                        onClick = { onNavigateToRegister() },
+                        colors = ButtonDefaults.buttonColors(containerColor = White.copy(alpha = 0.2f)),
+                        shape = RoundedCornerShape(20.dp),
+                        modifier = Modifier.height(40.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.padding(12.dp)
-                        )
+                        Text("Register", color = White, fontWeight = FontWeight.SemiBold)
                     }
+                }
+
+                Text(
+                    text = "Enter your\nmobile phone",
+                    color = White,
+                    fontSize = 32.sp,
+                    lineHeight = 40.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(bottom = 20.dp)
+                )
+            }
+        }
+
+        // --- Content Section ---
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp, vertical = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "You will get a code via sms.",
+                color = Color.Gray,
+                fontSize = 16.sp,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // Phone Number Input
+            Column {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("🇬🇧", fontSize = 24.sp)
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = Color.Gray
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = "(+44)",
+                        color = Color.Black,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    BasicTextField(
+                        value = inputNumber,
+                        onValueChange = { },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onFocusChanged { focusState ->
+                                if (focusState.isFocused) {
+                                    isVisible = true
+                                }
+                            },
+                        textStyle = TextStyle(
+                            fontSize = 20.sp,
+                            color = Color.Black,
+                            fontWeight = FontWeight.Medium
+                        ),
+                        readOnly = true,
+                        decorationBox = { innerTextField ->
+                            if (inputNumber.isEmpty()) {
+                                Text("00 0000 0000", color = Color.LightGray, fontSize = 20.sp)
+                            }
+                            innerTextField()
+                        }
+                    )
+                }
+                HorizontalDivider(
+                    modifier = Modifier.padding(top = 8.dp),
+                    thickness = 1.dp,
+                    color = Color.LightGray
+                )
+            }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // Remember Me and Next Button
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = isChecked,
+                        onCheckedChange = { isChecked = it },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = LightBlue,
+                            uncheckedColor = Color.LightGray
+                        )
+                    )
+                    Text(
+                        text = "Remember me",
+                        color = Color.Black,
+                        fontSize = 16.sp
+                    )
+                }
+
+                Surface(
+                    shape = CircleShape,
+                    color = if (inputNumber.length >= 10) GradientLightBlue else PaleCyan,
+                    enabled = inputNumber.length >= 10,
+                    modifier = Modifier.size(64.dp),
+                    onClick = { onNavigateToNext(inputNumber) }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null,
+                        tint = White,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
             }
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Keypad
         AnimatedVisibility(
             visible = isVisible,
             enter = slideInVertically(initialOffsetY = { it }),
-            exit = slideOutVertically(targetOffsetY = { it }),
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally)
+            exit = slideOutVertically(targetOffsetY = { it })
         ) {
             KeypadButton(
                 onKeyClick = {
-                    Log.e("Click_edit", "$it")
-                    inputNumber += it
+                    if (inputNumber.length < 15) {
+                        inputNumber += it
+                    }
                 },
-                onDeleteClick = { inputNumber.dropLast(inputNumber.length - 1) }
+                onDeleteClick = {
+                    if (inputNumber.isNotEmpty()) {
+                        inputNumber = inputNumber.dropLast(1)
+                    }
+                }
             )
         }
     }
