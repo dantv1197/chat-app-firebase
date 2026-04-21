@@ -47,15 +47,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fg.chat.app.model.message.conversation.Message
 import com.fg.chat.app.ui.theme.LightBlue
 import com.fg.chat.app.ui.theme.White
 
-data class Message(
-    val id: String,
-    val text: String,
-    val time: String,
-    val isFromMe: Boolean
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

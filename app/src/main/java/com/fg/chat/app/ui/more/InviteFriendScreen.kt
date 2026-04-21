@@ -24,15 +24,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fg.chat.app.R
+import com.fg.chat.app.model.more.Contact
 import com.fg.chat.app.ui.theme.LightBlue
 import com.fg.chat.app.ui.theme.White
-
-data class Contact(
-    val id: String,
-    val name: String,
-    val phoneNumber: String,
-    val profilePic: Int
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

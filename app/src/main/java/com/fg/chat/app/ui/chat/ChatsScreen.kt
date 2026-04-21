@@ -40,18 +40,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fg.chat.app.R
+import com.fg.chat.app.model.message.Message
 import com.fg.chat.app.ui.theme.LightBlue
 import com.fg.chat.app.ui.theme.White
-
-data class ChatItem(
-    val id: String,
-    val name: String,
-    val lastMessage: String,
-    val time: String,
-    val profilePic: Int,
-    val isOnline: Boolean = false,
-    val unreadCount: Int = 0
-)
 
 @Composable
 fun ChatsScreen(
@@ -63,10 +54,10 @@ fun ChatsScreen(
 ) {
     // Mock Data
     val chatList = listOf(
-        ChatItem("1", "Alex Linderson", "How are you today?", "2 min ago", R.drawable.image_introduce_1, true, 3),
-        ChatItem("2", "Angelina Jolie", "See you tomorrow!", "10 min ago", R.drawable.image_introduce_2),
-        ChatItem("3", "John Doe", "Thanks for the help", "1 hour ago", R.drawable.image_introduce_3),
-        ChatItem("4", "Robert Downey", "Let's meet at 5", "Yesterday", R.drawable.image_introduce_4)
+        Message("1", "Alex Linderson", "How are you today?", "2 min ago", R.drawable.image_introduce_1, true, 3),
+        Message("2", "Angelina Jolie", "See you tomorrow!", "10 min ago", R.drawable.image_introduce_2),
+        Message("3", "John Doe", "Thanks for the help", "1 hour ago", R.drawable.image_introduce_3),
+        Message("4", "Robert Downey", "Let's meet at 5", "Yesterday", R.drawable.image_introduce_4)
     )
 
     Box(modifier = Modifier.fillMaxSize().background(White)) {
@@ -240,7 +231,7 @@ fun ChatActionCard(
 }
 
 @Composable
-fun StoryItem(chat: ChatItem) {
+fun StoryItem(chat: Message) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
             modifier = Modifier
@@ -269,7 +260,7 @@ fun StoryItem(chat: ChatItem) {
 }
 
 @Composable
-fun ChatItemRow(chat: ChatItem, onChatClick: (String) -> Unit) {
+fun ChatItemRow(chat: Message, onChatClick: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

@@ -25,15 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fg.chat.app.R
+import com.fg.chat.app.model.group.Friend
 import com.fg.chat.app.ui.theme.LightBlue
 import com.fg.chat.app.ui.theme.White
-
-data class Friend(
-    val id: String,
-    val name: String,
-    val profilePic: Int,
-    var isSelected: Boolean = false
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +37,7 @@ fun CreateGroupScreen(
 ) {
     var groupName by remember { mutableStateOf("") }
     var searchQuery by remember { mutableStateOf("") }
-    
+
     // Mock Data
     val friendsList = remember {
         mutableStateListOf(
@@ -71,7 +65,7 @@ fun CreateGroupScreen(
         floatingActionButton = {
             if (groupName.isNotBlank() && friendsList.any { it.isSelected }) {
                 FloatingActionButton(
-                    onClick = { 
+                    onClick = {
                         onCreateClick(groupName, friendsList.filter { it.isSelected }.map { it.id })
                     },
                     containerColor = LightBlue,
@@ -103,9 +97,9 @@ fun CreateGroupScreen(
                 ) {
                     Icon(Icons.Default.Add, contentDescription = "Group Photo", tint = Color.Gray)
                 }
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 TextField(
                     value = groupName,
                     onValueChange = { groupName = it },
@@ -186,16 +180,16 @@ fun SelectableFriendItem(
                 .clip(CircleShape),
             contentScale = ContentScale.Crop
         )
-        
+
         Spacer(modifier = Modifier.width(16.dp))
-        
+
         Text(
             text = friend.name,
             modifier = Modifier.weight(1f),
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
         )
-        
+
         Checkbox(
             checked = friend.isSelected,
             onCheckedChange = onSelectedChange,

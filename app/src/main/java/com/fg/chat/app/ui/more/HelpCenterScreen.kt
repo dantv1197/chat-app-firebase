@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fg.chat.app.model.more.FaqData
 import com.fg.chat.app.ui.theme.LightBlue
 import com.fg.chat.app.ui.theme.White
 
@@ -121,7 +122,7 @@ fun HelpCenterScreen(
     }
 }
 
-data class FaqData(val question: String, val answer: String)
+
 
 val faqList = listOf(
     FaqData("How to create an account?", "To create an account, open the app and follow the onboarding instructions..."),
