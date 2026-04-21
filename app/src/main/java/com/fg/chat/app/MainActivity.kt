@@ -27,13 +27,13 @@ class MainActivity : ComponentActivity() {
     }
     @Composable
     fun MainScreen() {
-        val navController = rememberNavController() // Khởi tạo NavController ở cấp cao nhất của UI
+        val navController = rememberNavController() // Initialize NavController at the top level of the UI
 
         Scaffold(
-            bottomBar = { /* Nếu bạn có BottomNavigation thì đặt ở đây */ }
+            bottomBar = { /* Place BottomNavigation here if needed */ }
         ) { innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {
-                // Gọi file Navigation đã tách ở bước 2
+                // Call the separated Navigation file from step 2
                 AppNavigation(navController = navController)
             }
         }

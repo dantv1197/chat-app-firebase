@@ -43,7 +43,7 @@ fun KeypadButton(
             )
             .padding(4.dp)
     ) {
-        // Chia thành 4 hàng
+        // Split into 4 rows
         keys.chunked(3).forEach { rowKeys ->
             Row(modifier = Modifier.fillMaxWidth()) {
                 rowKeys.forEach { key ->

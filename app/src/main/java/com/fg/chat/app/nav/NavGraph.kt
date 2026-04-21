@@ -9,17 +9,18 @@ import androidx.navigation.navArgument
 import com.fg.chat.app.model.path.NavPath
 import com.fg.chat.app.ui.chat.ChatsScreen
 import com.fg.chat.app.ui.chat.converation.ConversationScreen
+import com.fg.chat.app.ui.chat.group.CreateGroupScreen
 import com.fg.chat.app.ui.login.LoginScreen
 import com.fg.chat.app.ui.login.OtpScreen
 import com.fg.chat.app.ui.login.RegisterScreen
 import com.fg.chat.app.ui.more.HelpCenterScreen
 import com.fg.chat.app.ui.more.InviteFriendScreen
 import com.fg.chat.app.ui.more.MoreScreen
-import com.fg.chat.app.ui.more.OtherItem
 import com.fg.chat.app.ui.more.OthersScreen
 import com.fg.chat.app.ui.more.SecurityScreen
 import com.fg.chat.app.ui.onboarding.IntroduceScreen
 import com.fg.chat.app.ui.onboarding.OnboardingScreen
+import com.fg.chat.app.ui.profile.ProfileScreen
 import com.google.gson.Gson
 
 @Composable
@@ -55,8 +56,12 @@ fun AppNavigation(navController: NavHostController) {
             Screen.Conversation.route,
             arguments = listOf(navArgument("user") { type = NavType.StringType })
         ) { entryValue ->
-            val navPath = Gson().fromJson(entryValue.arguments?.getString("user") ?: "", NavPath::class.java)
-            ConversationScreen(userName = navPath.userName, userProfilePic = navPath.userProfilePic, onBackClick = {})
+            val navPath =
+                Gson().fromJson(entryValue.arguments?.getString("user") ?: "", NavPath::class.java)
+            ConversationScreen(
+                userName = navPath.userName,
+                userProfilePic = navPath.userProfilePic,
+                onBackClick = {})
         }
         composable(Screen.Chat.route) {
             ChatsScreen(
@@ -95,6 +100,24 @@ fun AppNavigation(navController: NavHostController) {
                 onChangePinClick = {},
                 onFingerprintClick = {},
                 onFaceIdClick = {}
+            )
+        }
+        composable(Screen.CreateGroup.route) {
+            CreateGroupScreen(
+                onBackClick = { navController.popBackStack() },
+                onCreateClick = { groupName, members ->
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(Screen.Profile.route) {
+            ProfileScreen(
+                onBackClick = { navController.popBackStack() },
+                onLogoutClick = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }
     }
