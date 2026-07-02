@@ -1,6 +1,5 @@
 package com.fg.chat.messenger.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,14 +13,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fg.chat.messenger.model.Message
-import com.fg.chat.messenger.model.MessageStatus
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fg.chat.messenger.domain.model.Message
 import com.fg.chat.messenger.ui.components.MessageStatusIcon
+import com.fg.chat.messenger.viewmodel.ChatDetailIntent
+import com.fg.chat.messenger.viewmodel.ChatDetailViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,18 +29,13 @@ import java.util.*
 @Composable
 fun ChatDetailScreen(
     chatId: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: ChatDetailViewModel = viewModel()
 ) {
-    var messageText by remember { mutableStateOf("") }
-    
-    // Mock data for demonstration
-    val mockMessages = remember {
-        mutableStateListOf(
-            Message(senderId = "other", content = "Hey! How are you doing?", chatId = chatId, status = MessageStatus.READ, timestamp = System.currentTimeMillis() - 7200000),
-            Message(senderId = "me", content = "I'm good, thanks! Just working on the new app.", chatId = chatId, status = MessageStatus.READ, timestamp = System.currentTimeMillis() - 7100000),
-            Message(senderId = "other", content = "That sounds great! Is it the messenger app?", chatId = chatId, status = MessageStatus.READ, timestamp = System.currentTimeMillis() - 7000000),
-            Message(senderId = "me", content = "Yes, exactly!", chatId = chatId, status = MessageStatus.DELIVERED, timestamp = System.currentTimeMillis() - 3600000)
-        )
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(chatId) {
+        viewModel.handleIntent(ChatDetailIntent.LoadChat(chatId))
     }
 
     Scaffold(
@@ -54,13 +49,15 @@ fun ChatDetailScreen(
                             color = MaterialTheme.colorScheme.secondaryContainer
                         ) {
                             Box(contentAlignment = Alignment.Center) {
-                                Text("A", style = MaterialTheme.typography.bodyMedium)
+                                Text(state.chatName.take(1), style = MaterialTheme.typography.bodyMedium)
                             }
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         Column {
-                            Text("Alice Smith", style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold))
-                            Text("Online", style = MaterialTheme.typography.labelSmall, color = Color.Green)
+                            Text(state.chatName, style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold))
+                            if (state.isOnline) {
+                                Text("Online", style = MaterialTheme.typography.labelSmall, color = Color.Green)
+                            }
                         }
                     }
                 },
@@ -78,26 +75,27 @@ fun ChatDetailScreen(
         },
         bottomBar = {
             ChatInput(
-                messageText = messageText,
-                onMessageChange = { messageText = it },
-                onSendClick = {
-                    if (messageText.isNotBlank()) {
-                        mockMessages.add(Message(senderId = "me", content = messageText, chatId = chatId))
-                        messageText = ""
-                    }
-                }
+                messageText = state.messageText,
+                onMessageChange = { viewModel.handleIntent(ChatDetailIntent.MessageTextChanged(it)) },
+                onSendClick = { viewModel.handleIntent(ChatDetailIntent.SendMessage) }
             )
         }
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 16.dp),
-            reverseLayout = false // In real app, often reversed
-        ) {
-            items(mockMessages) { message ->
-                MessageBubble(message = message, isMe = message.senderId == "me")
+        if (state.isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp),
+                reverseLayout = false
+            ) {
+                items(state.messages) { message ->
+                    MessageBubble(message = message, isMe = message.senderId == "me")
+                }
             }
         }
     }

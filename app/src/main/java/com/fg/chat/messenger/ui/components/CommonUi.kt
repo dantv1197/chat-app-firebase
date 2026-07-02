@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.fg.chat.messenger.model.MessageStatus
-import com.fg.chat.messenger.model.UserStatus
+import com.fg.chat.messenger.domain.model.MessageStatus
+import com.fg.chat.messenger.domain.model.UserStatus
 
 @Composable
 fun StatusIndicator(status: UserStatus, modifier: Modifier = Modifier) {

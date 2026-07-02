@@ -1,0 +1,87 @@
+{
+  "project_info": {
+    "project_number": "350831286891",
+    "firebase_url": "https://chat-firebase-ef2ba-default-rtdb.firebaseio.com",
+    "project_id": "chat-firebase-ef2ba",
+    "storage_bucket": "chat-firebase-ef2ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350831286891:android:e8d8b4ce40321b93876f2e",
+        "android_client_info": {
+          "package_name": "chat.jetpack.demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf45FMQqbAfL6l6g4tPuvcA8s67vdRFk0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350831286891:android:36bdab9af86a0002876f2e",
+        "android_client_info": {
+          "package_name": "com.example.chatfirebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf45FMQqbAfL6l6g4tPuvcA8s67vdRFk0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350831286891:android:9fa3e7f58ecb9739876f2e",
+        "android_client_info": {
+          "package_name": "com.fg.chat.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf45FMQqbAfL6l6g4tPuvcA8s67vdRFk0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350831286891:android:bd71404c34c7cd39876f2e",
+        "android_client_info": {
+          "package_name": "com.fg.chat.messenger"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf45FMQqbAfL6l6g4tPuvcA8s67vdRFk0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
