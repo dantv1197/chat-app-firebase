@@ -1,0 +1,3 @@
+storePassword=TiJ7tjeLnkPUssZGAXIMvB2dU1oWqvjXXhG5IWSLwgY=
+keyAlias=release-key
+keyPassword=TiJ7tjeLnkPUssZGAXIMvB2dU1oWqvjXXhG5IWSLwgY=
