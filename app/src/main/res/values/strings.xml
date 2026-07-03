@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">Messenger</string>
+    <string name="welcome_message">Welcome to Messenger</string>
+    <string name="login_continue">Login to continue</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="dont_have_account">Don\'t have an account? Sign Up</string>
+    <string name="fill_all_fields">Please fill all fields</string>
+    <string name="login_failed">Login failed</string>
+    <string name="create_account">Create Account</string>
+    <string name="join_messenger">Join Messenger</string>
+    <string name="username">Username</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="back">Back</string>
+    <string name="search">Search</string>
+    <string name="profile">Profile</string>
+    <string name="new_chat">New Chat</string>
+    <string name="change_photo">Change photo</string>
+    <string name="status">Status</string>
+    <string name="save">Save</string>
+    <string name="edit">Edit</string>
+    <string name="no_status_set">No status set</string>
+    <string name="logout">Logout</string>
+    <string name="online">Online</string>
+    <string name="more">More</string>
+    <string name="attach">Attach</string>
+    <string name="message_placeholder">Message</string>
+    <string name="send">Send</string>
 </resources>

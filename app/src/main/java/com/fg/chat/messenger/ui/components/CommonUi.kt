@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,40 +20,44 @@ import com.fg.chat.messenger.domain.model.UserStatus
 @Composable
 fun StatusIndicator(status: UserStatus, modifier: Modifier = Modifier) {
     val color = when (status) {
-        UserStatus.ONLINE -> Color.Green
-        UserStatus.AWAY -> Color.Yellow
-        UserStatus.BUSY -> Color.Red
-        UserStatus.OFFLINE -> Color.Gray
+        UserStatus.ONLINE -> MaterialTheme.colorScheme.tertiary // Success Green
+        UserStatus.AWAY -> Color(0xFFFFCC00) // Warning Yellow (often custom)
+        UserStatus.BUSY -> MaterialTheme.colorScheme.error // Error Red
+        UserStatus.OFFLINE -> MaterialTheme.colorScheme.outline
     }
     Box(
         modifier = modifier
             .size(12.dp)
             .clip(CircleShape)
             .background(color)
-            .background(Color.White.copy(alpha = 0.2f)) // Optional border-like effect
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.2f))
     )
 }
 
 @Composable
-fun MessageStatusIcon(status: MessageStatus, modifier: Modifier = Modifier) {
+fun MessageStatusIcon(
+    status: MessageStatus,
+    modifier: Modifier = Modifier,
+    tint: Color = MaterialTheme.colorScheme.onSurfaceVariant
+) {
     when (status) {
         MessageStatus.SENT -> Icon(
             imageVector = Icons.Default.Check,
             contentDescription = "Sent",
             modifier = modifier.size(16.dp),
-            tint = Color.Gray
+            tint = tint
         )
         MessageStatus.DELIVERED -> Icon(
             imageVector = Icons.Default.DoneAll,
             contentDescription = "Delivered",
             modifier = modifier.size(16.dp),
-            tint = Color.Gray
+            tint = tint
         )
         MessageStatus.READ -> Icon(
             imageVector = Icons.Default.DoneAll,
             contentDescription = "Read",
             modifier = modifier.size(16.dp),
-            tint = Color(0xFF00B0FF)
+            tint = Color(0xFF00B0FF) // Standard "Read" blue remains constant
         )
     }
 }

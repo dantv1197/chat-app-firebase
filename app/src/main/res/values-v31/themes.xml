@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-
+<resources>
     <style name="Theme.Messenger" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#FFFFFF</item>
+
         <!-- 2. Ép Android 12+ thay icon mặc định thành logo của bạn -->
-        <item name="android:windowBackground">@drawable/solar_system_animation</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/solar_system_animation</item>
     </style>
 </resources>

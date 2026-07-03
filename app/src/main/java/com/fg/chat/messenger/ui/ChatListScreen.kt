@@ -35,10 +35,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.fg.chat.messenger.R
 import com.fg.chat.messenger.domain.model.Chat
 import com.fg.chat.messenger.domain.model.UserStatus
 import com.fg.chat.messenger.ui.components.StatusIndicator
@@ -60,20 +61,20 @@ fun ChatListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Messenger") },
+                title = { Text(stringResource(R.string.app_name)) },
                 actions = {
                     IconButton(onClick = { /* Search */ }) {
-                        Icon(Icons.Default.Search, contentDescription = "Search")
+                        Icon(Icons.Default.Search, contentDescription = stringResource(R.string.search))
                     }
                     IconButton(onClick = onProfileClick) {
-                        Icon(Icons.Default.Person, contentDescription = "Profile")
+                        Icon(Icons.Default.Person, contentDescription = stringResource(R.string.profile))
                     }
                 }
             )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddChatClick) {
-                Icon(Icons.Default.Add, contentDescription = "New Chat")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.new_chat))
             }
         }
     ) { padding ->
@@ -92,7 +93,7 @@ fun ChatListScreen(
                     HorizontalDivider(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         thickness = 0.5.dp,
-                        color = Color.LightGray
+                        color = MaterialTheme.colorScheme.outlineVariant
                     )
                 }
             }
@@ -119,7 +120,8 @@ fun ChatItem(chat: Chat, onClick: () -> Unit) {
                 Box(contentAlignment = Alignment.Center) {
                     Text(
                         text = chat.name.take(1).uppercase(),
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
             }
@@ -146,20 +148,21 @@ fun ChatItem(chat: Chat, onClick: () -> Unit) {
                     text = chat.name,
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 chat.lastMessageTime?.let {
                     Text(
                         text = formatTime(it),
                         style = MaterialTheme.typography.labelSmall,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
             Text(
                 text = chat.lastMessage ?: "",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

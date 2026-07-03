@@ -1,5 +1,6 @@
 package com.fg.chat.messenger.di
 
+import com.fg.chat.messenger.data.local.PreferenceManager
 import com.fg.chat.messenger.data.repository.AuthRepositoryImpl
 import com.fg.chat.messenger.data.repository.ChatRepositoryImpl
 import com.fg.chat.messenger.domain.repository.AuthRepository
@@ -16,8 +17,8 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(): AuthRepository {
-        return AuthRepositoryImpl()
+    fun provideAuthRepository(preferenceManager: PreferenceManager): AuthRepository {
+        return AuthRepositoryImpl(preferenceManager)
     }
 
     @Provides
