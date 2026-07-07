@@ -1,20 +1,8 @@
 package com.fg.chat.app.ui.screen.chat
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -24,12 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,11 +23,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.fg.chat.app.R
-import com.fg.chat.app.model.message.Message
-import com.fg.chat.app.model.message.MessageType
-import com.fg.chat.app.model.user.Status
-import com.fg.chat.app.model.user.User
+import com.fg.chat.app.model.message.ChatListItem
 
 @Composable
 fun ChatsScreen(
@@ -54,13 +35,8 @@ fun ChatsScreen(
     onAddFriendClick: () -> Unit,
     onCreateGroupClick: () -> Unit
 ) {
-    // Mock Data
-    val chatList = listOf(
-        Message("1", User(), "How are you today?", 10233265656, MessageType.TEXT, true),
-        Message("2", User(), "See you tomorrow!", 10233265656, MessageType.TEXT,false),
-        Message("3", User(), "Thanks for the help", 10233265656, MessageType.TEXT,false),
-        Message("4", User(), "Let's meet at 5", 10233265656, MessageType.TEXT,false)
-    )
+    // Using Mock Data Template
+    val chatList = ChatDataTemplate.mockChatList
 
     Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -94,10 +70,11 @@ fun ChatsScreen(
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.surfaceVariant)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.image_introduce_1),
+                    AsyncImage(
+                        model = "https://api.dicebear.com/7.x/avataaars/svg?seed=MyProfile",
                         contentDescription = "Profile",
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
+                        placeholder = painterResource(id = R.drawable.image_introduce_1)
                     )
                 }
             }
@@ -234,7 +211,7 @@ fun ChatActionCard(
 }
 
 @Composable
-fun StoryItem(chat: Message) {
+fun StoryItem(chat: ChatListItem) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
             modifier = Modifier
@@ -244,12 +221,13 @@ fun StoryItem(chat: Message) {
                 .padding(2.dp)
                 .clip(CircleShape)
         ) {
-            Image(
-                painter = painterResource(id = chat.senderId.photoUrl),
+            AsyncImage(
+                model = chat.contact?.photoUrl ?: chat.profilePic,
                 contentDescription = null,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(id = com.fg.chat.app.R.drawable.image_introduce_1)
             )
-            if (chat.senderId.status == Status.ONLINE) {
+            if (chat.isOnline) {
                 Box(
                     modifier = Modifier
                         .size(12.dp)
@@ -263,20 +241,21 @@ fun StoryItem(chat: Message) {
 }
 
 @Composable
-fun ChatItemRow(chat: Message, onChatClick: (String) -> Unit) {
+fun ChatItemRow(chat: ChatListItem, onChatClick: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onChatClick(chat.id) },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = chat.profilePic),
+        AsyncImage(
+            model = chat.contact?.photoUrl ?: chat.profilePic,
             contentDescription = null,
             modifier = Modifier
                 .size(52.dp)
                 .clip(CircleShape),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            placeholder = painterResource(id = R.drawable.image_introduce_1)
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column(modifier = Modifier.weight(1f)) {

@@ -7,27 +7,29 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.fg.chat.app.model.path.NavPath
-import com.fg.chat.app.ui.chat.ChatsScreen
-import com.fg.chat.app.ui.chat.converation.ConversationScreen
-import com.fg.chat.app.ui.chat.group.CreateGroupScreen
-import com.fg.chat.app.ui.login.LoginScreen
-import com.fg.chat.app.ui.login.OtpScreen
-import com.fg.chat.app.ui.login.RegisterScreen
-import com.fg.chat.app.ui.more.HelpCenterScreen
-import com.fg.chat.app.ui.more.InviteFriendScreen
-import com.fg.chat.app.ui.more.MoreScreen
-import com.fg.chat.app.ui.more.OthersScreen
-import com.fg.chat.app.ui.more.SecurityScreen
-import com.fg.chat.app.ui.onboarding.IntroduceScreen
-import com.fg.chat.app.ui.onboarding.OnboardingScreen
-import com.fg.chat.app.ui.profile.ProfileScreen
+import com.fg.chat.app.ui.screen.chat.ChatsScreen
+import com.fg.chat.app.ui.screen.chat.ConversationScreen
+import com.fg.chat.app.ui.screen.chat.CreateGroupScreen
+import com.fg.chat.app.ui.screen.login.LoginScreen
+import com.fg.chat.app.ui.screen.login.OtpScreen
+import com.fg.chat.app.ui.screen.login.RegisterScreen
+import com.fg.chat.app.ui.screen.more.HelpCenterScreen
+import com.fg.chat.app.ui.screen.more.InviteFriendScreen
+import com.fg.chat.app.ui.screen.more.MoreScreen
+import com.fg.chat.app.ui.screen.more.OthersScreen
+import com.fg.chat.app.ui.screen.more.SecurityScreen
+import com.fg.chat.app.ui.screen.onboarding.IntroduceScreen
+import com.fg.chat.app.ui.screen.onboarding.OnboardingScreen
+import com.fg.chat.app.ui.screen.profile.ProfileScreen
+import com.fg.chat.app.ui.screen.messenger.MessengerConversation
+import com.fg.chat.app.ui.screen.messenger.MessengerHome
 import com.google.gson.Gson
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = "onboarding"
+        startDestination = Screen.MessengerHome.route
     ) {
         composable(Screen.Onboarding.route) {
             OnboardingScreen(onFinish = {
@@ -47,7 +49,7 @@ fun AppNavigation(navController: NavHostController) {
             LoginScreen(onNavigateToNext = {}, onNavigateToRegister = {})
         }
         composable(Screen.OtpVerify.route) {
-            OtpScreen(onBack = {}, onNext = {})
+            OtpScreen (onBack = {}, onNext = {})
         }
         composable(Screen.Register.route) {
             RegisterScreen(onNavigateToNext = { key, value -> {} }, onBack = {})
@@ -61,42 +63,47 @@ fun AppNavigation(navController: NavHostController) {
             ConversationScreen(
                 userName = navPath.userName,
                 userProfilePic = navPath.userProfilePic,
-                onBackClick = {})
+                onBackClick = { navController.popBackStack() })
         }
         composable(Screen.Chat.route) {
             ChatsScreen(
-                onChatClick = {},
+                onChatClick = { chatId ->
+                    // Navigation logic to Conversation
+                },
                 onAddClick = {},
                 onSearchClick = {},
-                onAddFriendClick = {}
-            ) { }
+                onAddFriendClick = {},
+                onCreateGroupClick = {
+                    navController.navigate(Screen.CreateGroup.route)
+                }
+            )
         }
         composable(Screen.HelpCenter.route) {
             HelpCenterScreen(
-                onBackClick = {}
+                onBackClick = { navController.popBackStack() }
             )
         }
         composable(Screen.InviteFriend.route) {
             InviteFriendScreen(
-                onBackClick = {}
+                onBackClick = { navController.popBackStack() }
             )
         }
         composable(Screen.More.route) {
             MoreScreen(
-                onBackClick = {},
-                onInviteFriendClick = {},
-                onSecurityClick = {},
-                onHelpCenterClick = {}
+                onBackClick = { navController.popBackStack() },
+                onInviteFriendClick = { navController.navigate(Screen.InviteFriend.route) },
+                onSecurityClick = { navController.navigate(Screen.Security.route) },
+                onHelpCenterClick = { navController.navigate(Screen.HelpCenter.route) }
             )
         }
         composable(Screen.Other.route) {
             OthersScreen(
-                onBackClick = {}
+                onBackClick = { navController.popBackStack() }
             )
         }
         composable(Screen.Security.route) {
             SecurityScreen(
-                onBackClick = {},
+                onBackClick = { navController.popBackStack() },
                 onChangePinClick = {},
                 onFingerprintClick = {},
                 onFaceIdClick = {}
@@ -118,6 +125,23 @@ fun AppNavigation(navController: NavHostController) {
                         popUpTo(0) { inclusive = true }
                     }
                 }
+            )
+        }
+        composable(Screen.MessengerHome.route) {
+            MessengerHome(onChatClick = { chatId ->
+                // Simplified navigation for demo
+                navController.navigate("messenger-conversation/User")
+            })
+        }
+        composable(
+            Screen.MessengerConversation.route,
+            arguments = listOf(navArgument("userName") { type = NavType.StringType })
+        ) { entry ->
+            val userName = entry.arguments?.getString("userName") ?: "User"
+            MessengerConversation(
+                userName = userName,
+                userProfilePic = "https://api.dicebear.com/7.x/avataaars/svg?seed=$userName",
+                onBackClick = { navController.popBackStack() }
             )
         }
     }

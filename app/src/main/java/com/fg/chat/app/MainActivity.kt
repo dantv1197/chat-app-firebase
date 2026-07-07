@@ -1,7 +1,5 @@
 package com.fg.chat.app
 
-import android.annotation.SuppressLint
-import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,8 +9,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import android.annotation.SuppressLint
+import android.os.Bundle
 import com.fg.chat.app.nav.AppNavigation
-import com.fg.chat.app.ui.theme.ChatappTheme
+import com.fg.chat.app.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ChatappTheme {
+            AppTheme {
                 MainScreen()
             }
         }

@@ -15,4 +15,6 @@ sealed class Screen(val route: String) {
     object Security : Screen("security")
     object CreateGroup : Screen("create-group")
     object Profile : Screen("profile")
+    object MessengerHome : Screen("messenger-home")
+    object MessengerConversation : Screen("messenger-conversation/{userName}")
 }

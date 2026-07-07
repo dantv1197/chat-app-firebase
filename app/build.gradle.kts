@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.CommonExtension
 
 plugins {
     alias(libs.plugins.android.application)
@@ -9,22 +10,32 @@ plugins {
     alias(libs.plugins.google.services)
 }
 
+android {
+    configureKotlinAndroid(this)
+}
+
 internal fun Project.configureKotlinAndroid(
-    extension: ApplicationExtension, // Sử dụng interface mới
+    extension: CommonExtension, // Sử dụng interface mới
 ) {
     extension.apply {
+        compileSdk = libs.versions.android.targetSdk.get().toInt()
         namespace = "com.fg.chat.app"
-        compileSdk = 37
-        defaultConfig {
-            minSdk = 24
-            targetSdk = 37
-            versionName = "1.0"
-
+        defaultConfig.apply {
+            minSdk = libs.versions.android.minSdk.get().toInt()
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
+        if (this is ApplicationExtension) {
+            this.apply {
+                defaultConfig {
+                    targetSdk = libs.versions.android.targetSdk.get().toInt()
+                    applicationId = "com.fg.chat.app"
+                    versionName = libs.versions.app.versionName.get()
+                }
+            }
+        }
 
-        buildTypes {
-            release {
+        buildTypes.apply {
+            getByName("release") {
                 isMinifyEnabled = false
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -33,20 +44,21 @@ internal fun Project.configureKotlinAndroid(
             }
         }
 
-        compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_11
-            targetCompatibility = JavaVersion.VERSION_11
+        compileOptions.apply {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
         }
 
-        buildFeatures {
+        buildFeatures.apply {
             compose = true
+            resValues = true
         }
 
     }
 
     extensions.configure<KotlinAndroidProjectExtension> {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 }
@@ -67,6 +79,11 @@ dependencies {
     implementation(libs.androidx.compose.material)
     implementation(libs.google.gson)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
+    implementation(libs.coil.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

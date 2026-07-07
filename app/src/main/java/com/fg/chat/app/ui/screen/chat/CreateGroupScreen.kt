@@ -1,4 +1,4 @@
-package com.fg.chat.app.ui.screen.chat.group
+package com.fg.chat.app.ui.screen.chat
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.fg.chat.app.R
 import com.fg.chat.app.model.group.Friend
 
@@ -184,13 +185,15 @@ fun SelectableFriendItem(
             .clickable { onSelectedChange(!friend.isSelected) },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = friend.profilePic),
+        AsyncImage(
+            model = friend.profilePic,
             contentDescription = null,
             modifier = Modifier
                 .size(50.dp)
                 .clip(CircleShape),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            placeholder = painterResource(id = R.drawable.image_introduce_1),
+            error = painterResource(id = R.drawable.image_introduce_1)
         )
 
         Spacer(modifier = Modifier.width(16.dp))

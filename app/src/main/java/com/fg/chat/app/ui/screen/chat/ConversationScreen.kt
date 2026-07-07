@@ -1,20 +1,7 @@
-package com.fg.chat.app.ui.chat.converation
+package com.fg.chat.app.ui.screen.chat
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -25,46 +12,30 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fg.chat.app.model.message.conversation.Message
-
+import coil.compose.AsyncImage
+import com.fg.chat.app.model.message.Message
+import java.text.SimpleDateFormat
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConversationScreen(
     userName: String,
-    userProfilePic: Int,
+    userProfilePic: Any, // Changed to Any to support Resource ID or URL
     onBackClick: () -> Unit
 ) {
-    val messages = listOf(
-        Message("1", "Hello! How are you?", "09:41", false),
-        Message("2", "I'm doing great, thanks! How about you?", "09:45", true),
-        Message("3", "Just finished a new design project.", "09:46", false),
-        Message("4", "That's awesome! Can I see it?", "09:47", true),
-        Message("5", "Sure, I'll send it over in a bit.", "09:48", false)
-    )
+    // Using Mock Data from template
+    val messages = ChatDataTemplate.mockMessages
 
     var messageText by remember { mutableStateOf("") }
 
@@ -73,13 +44,14 @@ fun ConversationScreen(
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Image(
-                            painter = painterResource(id = userProfilePic),
+                        AsyncImage(
+                            model = userProfilePic,
                             contentDescription = null,
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(CircleShape),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            placeholder = painterResource(id = R.drawable.image_introduce_1)
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
@@ -138,31 +110,32 @@ fun ConversationScreen(
 
 @Composable
 fun MessageBubble(message: Message) {
-    val alignment = if (message.isFromMe) Alignment.CenterEnd else Alignment.CenterStart
-    val bubbleColor = if (message.isFromMe) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
-    val textColor = if (message.isFromMe) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-    val shape = if (message.isFromMe) {
+    val isFromMe = message.senderId == "me" // Simplified check for mock data
+    val alignment = if (isFromMe) Alignment.CenterEnd else Alignment.CenterStart
+    val bubbleColor = if (isFromMe) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
+    val textColor = if (isFromMe) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+    val shape = if (isFromMe) {
         RoundedCornerShape(16.dp, 16.dp, 0.dp, 16.dp)
     } else {
         RoundedCornerShape(16.dp, 16.dp, 16.dp, 0.dp)
     }
 
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = alignment) {
-        Column(horizontalAlignment = if (message.isFromMe) Alignment.End else Alignment.Start) {
+        Column(horizontalAlignment = if (isFromMe) Alignment.End else Alignment.Start) {
             Surface(
                 color = bubbleColor,
                 shape = shape,
                 shadowElevation = 1.dp
             ) {
                 Text(
-                    text = message.text,
+                    text = message.text ?: "",
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
                     color = textColor,
                     fontSize = 15.sp
                 )
             }
             Text(
-                text = message.time,
+                text = formatTimestamp(message.timestamp),
                 fontSize = 10.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 4.dp, start = 4.dp, end = 4.dp)
@@ -222,4 +195,10 @@ fun ChatInputBar(
             }
         }
     }
+}
+
+fun formatTimestamp(timestamp: Long): String {
+    val date = Date(timestamp)
+    val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return format.format(date)
 }
