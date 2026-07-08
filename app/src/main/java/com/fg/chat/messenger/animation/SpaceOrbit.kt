@@ -425,7 +425,7 @@ fun SpaceOrbitCanvas(
                 }
 
                 // Hành tinh tím nhạt đầu quỹ đạo
-                drawCircle(Color(0xFF020917), radius = 19.75f, center = Offset(351.41f, 93.01f))
+                drawCircle(Color(0xFF4B84F8), radius = 19.75f, center = Offset(351.41f, 93.01f))
                 drawCircle(
                     theme.orbitMiddle,
                     radius = 19.75f,

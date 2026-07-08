@@ -28,4 +28,11 @@
     <string name="attach">Attach</string>
     <string name="message_placeholder">Message</string>
     <string name="send">Send</string>
+    
+    <string name="phone_number">Phone Number</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="send_code">Send Code</string>
+    <string name="verify_code">Verify Code</string>
+    <string name="use_phone">Use Phone Number</string>
+    <string name="use_email">Use Email</string>
 </resources>

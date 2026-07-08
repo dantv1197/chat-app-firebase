@@ -8,5 +8,6 @@ data class User(
     val email: String,
     val avatarUrl: String? = null,
     val status: UserStatus = UserStatus.OFFLINE,
-    val statusMessage: String? = null
+    val statusMessage: String? = null,
+    val fcmToken: String? = null
 )

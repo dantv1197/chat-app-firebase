@@ -85,7 +85,9 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
     implementation(platform(libs.firebase.bom))
-    implementation(platform(libs.firebase.analytics))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.auth)
 
     // Hilt
     implementation(libs.hilt.android)
